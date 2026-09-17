@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>迷你聚合热搜网站 · 建设中</title>
+  <meta name="description" content="迷你聚合热搜网站（mini-hot）：全网热搜，一站聚合。首个版本开发中。">
+  <style>
+    :root {
+      --bg: #f6f7f9;
+      --card: #ffffff;
+      --text: #1c1e21;
+      --muted: #65676b;
+      --accent: #e8563f;
+      --accent-soft: #fdeeec;
+      --border: #e4e6eb;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+        "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 18px 24px;
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+    }
+    .logo {
+      width: 30px; height: 30px;
+      border-radius: 8px;
+      background: var(--accent);
+      display: grid; place-items: center;
+      flex-shrink: 0;
+    }
+    .logo svg { width: 18px; height: 18px; fill: #fff; }
+    .brand { font-size: 17px; font-weight: 700; }
+    .brand small { color: var(--muted); font-weight: 400; margin-left: 8px; font-size: 13px; }
+    main {
+      flex: 1;
+      width: 100%;
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 64px 24px 48px;
+      text-align: center;
+    }
+    .status-badge {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      margin-bottom: 24px;
+    }
+    h1 { font-size: 34px; line-height: 1.3; margin-bottom: 14px; }
+    .subtitle { color: var(--muted); font-size: 16px; line-height: 1.8; margin-bottom: 40px; }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 40px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 22px 12px;
+      text-align: center;
+    }
+    .card .bar {
+      height: 10px;
+      border-radius: 5px;
+      background: var(--border);
+      margin: 8px auto 0;
+    }
+    .card .bar.short { width: 60%; }
+    .card .bar.mid { width: 80%; }
+    .card .rank {
+      display: inline-grid; place-items: center;
+      width: 26px; height: 26px;
+      border-radius: 7px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 13px; font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .hint { color: var(--muted); font-size: 13px; }
+    footer {
+      padding: 18px 24px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      border-top: 1px solid var(--border);
+      background: var(--card);
+    }
+    footer a { color: var(--muted); }
+    @media (max-width: 520px) {
+      h1 { font-size: 26px; }
+      .cards { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo" aria-hidden="true">
+      <svg viewBox="0 0 24 24"><path d="M13.5 0.67s0.74 2.65 0.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l0.03-0.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5 0.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-0.36 3.6-1.21 4.62-2.58 0.39 1.29 0.59 2.65 0.59 4.04 0 2.65-2.15 4.8-4.8 4.8z"/></svg>
+    </div>
+    <div class="brand">mini-hot<small>迷你聚合热搜网站</small></div>
+  </header>
+
+  <main>
+    <span class="status-badge">首个版本开发中</span>
+    <h1>全网热搜，一站聚合</h1>
+    <p class="subtitle">
+      这里未来将汇聚各平台的热搜榜单，帮你一眼看清大家正在关注什么。<br>
+      网站正在搭建中，敬请期待。
+    </p>
+
+    <div class="cards" aria-hidden="true">
+      <div class="card"><span class="rank">1</span><div class="bar mid"></div><div class="bar short"></div></div>
+      <div class="card"><span class="rank">2</span><div class="bar mid"></div><div class="bar short"></div></div>
+      <div class="card"><span class="rank">3</span><div class="bar mid"></div><div class="bar short"></div></div>
+    </div>
+
+    <p class="hint">占位页 · 正式功能上线后此处将替换为热搜看板</p>
+  </main>
+
+  <footer>
+    © 2026 <a href="https://github.com/Panky-pan/mini-hot" target="_blank" rel="noopener">Panky-pan/mini-hot</a>
+  </footer>
+</body>
+</html>
