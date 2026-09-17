@@ -1,279 +1,126 @@
 # Day 1 ｜ 创建 GitHub 仓库并保存第一次版本
 
-> 面向 Git 初学者。每一步都写清：**在哪个文件夹执行**、**命令做什么**、**成功时看到什么**。
 > 项目文件夹：`D:\Vibe Coding\mini-hot`
 
 ---
 
-## 开始之前的现状说明
+## 执行状态（2026-09-17 15:40 更新）
 
-我检查环境时发现，你的情况和你以为的不太一样，先说清楚，避免误会：
+由我代为执行，结果如下：
 
-| 项 | 实际情况 |
-|---|---|
-| 项目文件夹 `mini-hot` | ✅ 存在，但是**完全空的**（0 个文件） |
-| `mini-hot` 是否已是 Git 仓库 | ✅ 不是，状态干净，可直接初始化 |
-| `mini-hot\.gitignore` | ✅ 我已创建（你选的"从零开始"，只需要这个配置文件） |
-| GitHub 仓库 `mini-hot` | ✅ 已确认存在且为空，可直接用 |
-| 原来的 `mini-hot-hub` | ❌ 已被删除，按你的选择**不找回** |
+| 步骤 | 命令 | 状态 |
+|---|---|---|
+| 1 | `git init -b main` | ✅ 已完成 |
+| 2 | 忽略规则验证（`git check-ignore`） | ✅ 7 类敏感文件全部命中 |
+| 3 | `git remote add origin .../mini-hot.git` | ✅ 已完成 |
+| 4 | `git add .` | ✅ 已完成（仅 2 个文件） |
+| 5 | `git commit` | ✅ 已完成，提交 `cb94f4d` |
+| 6 | `git push -u origin main` | ❌ **失败，需你在本机执行** |
 
-**重要提醒**：`mini-hot` 是空文件夹，所以按本清单执行后，GitHub 上会看到一个**只含 `.gitignore` 的仓库**，没有项目代码。这是"从零开始"的正常结果——新代码你后续自己写，写完再 `git add . && git commit && git push` 即可。
+### 推送失败原因
+
+```
+fatal: unable to access 'https://github.com/Panky-pan/mini-hot.git/':
+CONNECT tunnel failed, response 502
+```
+
+这不是你的配置问题，也不是仓库地址错误。原因是**我的执行环境没有访问 GitHub 的网络权限**（网络请求被代理拦截，返回 502）。
+
+我做了对比测试佐证：直接访问 `https://github.com/Panky-pan/mini-hot` 网页也超时，而我此前能正常访问该网页——说明是**环境网络限制**，非 GitHub 故障、非配置错误。
+
+**好消息：前 5 步全部成功，提交已安全保存在本地。** 你现在只需在**自己的电脑**上敲一条命令即可完成推送。
 
 ---
 
-## 第 0 步：打开终端并进入项目文件夹
+## 你现在只需要做这一步
 
-**在哪个文件夹执行**：打开终端（推荐开始菜单搜 `Git Bash`），然后执行
+在你自己的 PowerShell 或 Git Bash 里执行：
 
 ```bash
 cd "D:/Vibe Coding/mini-hot"
-```
-
-**命令做什么**：把终端的工作目录切换到项目文件夹。后面所有命令都在这里执行。
-
-**成功时看到什么**：没有报错。
-
-> ⚠️ **已知环境问题**：你的 Git Bash 里 `ls`、`cat`、`find`、`grep` 这些基础命令**全部报 `command not found`**（我检查时实测过）。
-> 所以清单里我**刻意避开了这些命令**，全部改用 `git` 原生命令验证 —— 这些是能正常跑的。
-> 如果哪条命令报 `command not found`，那不是你操作错了，是环境问题，告诉我即可。
-
----
-
-## 第 1 步：确认忽略文件已就位
-
-**在哪个文件夹执行**：`D:\Vibe Coding\mini-hot`
-
-**命令**
-```bash
-git status
-```
-
-**命令做什么**：先看 Git 能不能识别这个目录。此时还没初始化，所以会报错——**这是预期的**，用来确认路径正确。
-
-**成功时看到什么**：
-```
-fatal: not a git repository (or any of the parent directories): .git
-```
-
-看到这个才是对的，说明你在正确的文件夹里。
-
-然后确认忽略文件在（用 Git 自带的方式列目录）：
-```bash
-git ls-files --others --exclude-standard
-```
-
-**成功时看到什么**：输出 `.gitignore`
-
-> 💡 这条命令的意思是「列出所有未被忽略、也未被跟踪的文件」。它应该只列出 `.gitignore`。
-> 现在目录里只有这一个文件，所以很正常。
-
----
-
-## 第 2 步：初始化仓库
-
-**在哪个文件夹执行**：`D:\Vibe Coding\mini-hot`
-
-**命令**
-```bash
-git init -b main
-```
-
-**命令做什么**：在当前目录创建一个全新的 Git 仓库，并把默认分支命名为 `main`。
-`-b main` 是为了避免旧版 Git 默认用 `master` 导致分支名不一致。
-
-**成功时看到什么**：
-```
-Initialized empty Git repository in D:/Vibe Coding/mini-hot/.git/
-```
-
-验证：
-```bash
-git status
-```
-应看到：
-```
-On branch main
-
-No commits yet
-
-Untracked files:
-  (use "git add <file>..." to include in what will be committed)
-        .gitignore
-
-nothing added to commit but untracked files present (use "git add" to track)
-```
-
-**关键点**：`Untracked files` 下面**只有 `.gitignore` 一行**。这就是空项目该有的样子。
-
----
-
-## 第 3 步：确认忽略文件内容生效
-
-**在哪个文件夹执行**：`D:\Vibe Coding\mini-hot`
-
-**命令**
-```bash
-git check-ignore -v .env
-git check-ignore -v node_modules/whatever.txt
-git check-ignore -v hot.db
-```
-
-**命令做什么**：问 Git「这几个文件会被忽略吗」。`-v` 表示顺便告诉我是哪条规则命中的。
-
-**成功时看到什么**：每条都输出一行，形如
-```
-.gitignore:4:.env   .env
-.gitignore:24:node_modules/   node_modules/whatever.txt
-.gitignore:49:*.db   hot.db
-```
-
-这说明三类敏感文件（**密钥**、**依赖目录**、**本地数据库**）都已被正确忽略。
-
-> 💡 `git check-ignore` 是验证忽略规则最可靠的方式——比肉眼看文件内容强，因为它直接问 Git 的真实判断。
-
----
-
-## 第 4 步：确认远程仓库地址
-
-**在哪个文件夹执行**：`D:\Vibe Coding\mini-hot`
-
-先不加远程，只做核对。**去浏览器打开** `https://github.com/Panky-pan/mini-hot`
-
-**成功时看到什么**：页面显示 `This repository is empty.`（我已确认过，它确实是空的）
-
-> ⚠️ 若显示的**不是** `mini-hot`，或仓库已有内容，先停下来告诉我，不要继续。
-> 因为第 7 步会把你的内容推到这个地址。
-
----
-
-## 第 5 步：添加远程仓库地址
-
-**在哪个文件夹执行**：`D:\Vibe Coding\mini-hot`
-
-**命令**
-```bash
-git remote add origin https://github.com/Panky-pan/mini-hot.git
-```
-
-**命令做什么**：给本地仓库登记一个远程地址，起名叫 `origin`。
-`origin` 是 Git 的惯例叫法，可以理解为「老家的门牌号」——以后 `git push` 就是往这个地址送。
-
-**成功时看到什么**：没有输出（Git 的哲学：没消息就是好消息）。验证：
-
-```bash
-git remote -v
-```
-应看到两行，地址都必须是 `mini-hot`：
-```
-origin  https://github.com/Panky-pan/mini-hot.git (fetch)
-origin  https://github.com/Panky-pan/mini-hot.git (push)
-```
-
-**仔细核对是 `mini-hot`，不是 `mini-hot-hub`。**
-
----
-
-## 第 6 步：把文件放入暂存区
-
-**在哪个文件夹执行**：`D:\Vibe Coding\mini-hot`
-
-**命令**
-```bash
-git add .
-```
-
-**命令做什么**：把当前目录下所有**未被忽略**的文件标记为「准备提交」。
-`.gitignore` 里列出的文件会被自动跳过。
-
-**成功时看到什么**：没有输出。验证：
-
-```bash
-git status
-```
-应看到 `.gitignore` 出现在 `Changes to be committed`（绿色）下：
-```
-Changes to be committed:
-  (use "git rm --cached <file>..." to unstage)
-        new file:   .gitignore
-```
-
-**确认没有 `node_modules`、没有 `.env`、没有 `*.db`。**
-
----
-
-## 第 7 步：创建第一次提交
-
-**在哪个文件夹执行**：`D:\Vibe Coding\mini-hot`
-
-**命令**
-```bash
-git commit -m "chore: 初始化 mini-hot 仓库与忽略规则"
-```
-
-**命令做什么**：把暂存区的内容打包成一条历史记录，附上说明文字。
-提交说明用中文没问题，Git 支持 UTF-8。
-
-**成功时看到什么**：
-```
-[main (root-commit) a1b2c3d] chore: 初始化 mini-hot 仓库与忽略规则
- 1 file changed, 62 insertions(+)
- create mode 100644 .gitignore
-```
-
-关键看 **`(root-commit)`** —— 它表示这是仓库的第一次提交（没有父提交），正是你要的「第一次版本」。
-
-验证：
-```bash
-git log --oneline
-```
-应只有**一行**，就是你刚写的提交。
-
----
-
-## 第 8 步：推送到 GitHub
-
-**在哪个文件夹执行**：`D:\Vibe Coding\mini-hot`
-
-**命令**
-```bash
 git push -u origin main
 ```
 
-**命令做什么**：把本地 `main` 分支上传到 `origin`。
-`-u` 的作用是记住「本地 main 对应远程 main」，以后你只敲 `git push` 就够了。
-
 **成功时看到什么**：
 ```
-Enumerating objects: 3, done.
-Counting objects: 100% (3/3), done.
-Writing objects: 100% (3/3), 1.2 KiB | 1.2 MiB/s, done.
+Enumerating objects: 5, done.
+Counting objects: 100% (5/5), done.
+Writing objects: 100% (5/5), 1.5 KiB | 800 KiB/s, done.
 To https://github.com/Panky-pan/mini-hot.git
  * [new branch]      main -> main
 branch 'main' set up to track 'origin/main'.
 ```
 
-**可能遇到**：弹出登录窗口（浏览器授权，或要求输入用户名 + Personal Access Token）。
+**可能弹出登录窗口**：
+- 若弹出浏览器授权页 → 点同意即可（你的电脑已配 `credential.helper = manager`，会记住凭据）
+- 若要求输入密码 → **不能用账号密码**，需输入 Personal Access Token
+  （GitHub 网页 → 右上角头像 → Settings → Developer settings → Personal access tokens → Tokens (classic) → Generate new token，勾选 `repo` 权限）
 
-> ⚠️ GitHub **不接受账号密码**推送。若被要求密码，需要输入 **Personal Access Token**。
-> 若卡在这一步，把看到的提示**原文**发我，我给你具体生成步骤。
+**若仍报 502**：说明你本机网络也需代理。把报错原文发我，或在终端里配置代理后重试。
 
 ---
 
-## 第 9 步：验证结果（你说的验证方式）
+## 本次已完成的操作记录
 
-### 验证点 1：仓库有内容了
+以下命令我已代你执行完毕，**无需重复**：
 
-浏览器打开 `https://github.com/Panky-pan/mini-hot`
+```bash
+cd "D:/Vibe Coding/mini-hot"
+git init -b main                                        # ✅ 创建仓库，分支 main
+git check-ignore -v .env                                # ✅ 验证忽略规则
+git remote add origin https://github.com/Panky-pan/mini-hot.git   # ✅ 配远程
+git add .                                               # ✅ 暂存 2 个文件
+git commit -m "Day 1｜初始化 mini-hot 仓库与忽略规则"      # ✅ 提交 cb94f4d
+git push -u origin main                                 # ❌ 待你执行
+```
 
-**成功时看到什么**：
+---
+
+## 已完成的验证结果
+
+### 忽略规则验证（7 类敏感文件全部命中）
+
+| 测试文件 | 命中规则 | 结果 |
+|---|---|---|
+| `.env` | `.gitignore:4:.env` | ✅ 已忽略 |
+| `.env.local` | `.gitignore:99:*.local` | ✅ 已忽略 |
+| `node_modules/react/index.js` | `.gitignore:23:node_modules/` | ✅ 已忽略 |
+| `server/hot.db` | `.gitignore:43:*.db` | ✅ 已忽略 |
+| `data/local.sqlite3` | `.gitignore:52:data/` | ✅ 已忽略 |
+| `secrets.key` | `.gitignore:8:*.key` | ✅ 已忽略 |
+| `config/credentials.json` | `.gitignore:12:*credentials*.json` | ✅ 已忽略 |
+
+### 实际提交内容（仅 2 个文件）
+
+```
+A  .gitignore
+A  docs/Day1-GitHub初始化清单.md
+```
+
+**确认**：无 `.env`、无 `node_modules`、无 `*.db`、无密钥文件。
+
+### 提交记录
+
+```
+cb94f4d (root-commit) Day 1｜初始化 mini-hot 仓库与忽略规则
+ 2 files changed, 487 insertions(+)
+```
+
+`(root-commit)` = 第一次提交（无父提交），即你要的「第一次版本」。
+
+---
+
+## 推送后在 GitHub 上验证
+
+打开 `https://github.com/Panky-pan/mini-hot`
+
+**应看到**：
 - 不再是 `This repository is empty.`
-- 文件列表出现 **`.gitignore`**
-- 顶部显示 **`1 commit`**
-- 提交说明显示 `chore: 初始化 mini-hot 仓库与忽略规则`
+- 文件列表：`.gitignore` 和 `docs/`
+- 顶部显示 `1 commit`
+- 提交说明 `Day 1｜初始化 mini-hot 仓库与忽略规则`
 
-### 验证点 2：敏感文件没有出现 ✅（核心）
-
-在仓库页面确认以下内容**都不存在**：
+**逐项确认以下内容都不存在**（核心验收）：
 
 | 不应出现 | 说明 |
 |---|---|
@@ -284,57 +131,41 @@ branch 'main' set up to track 'origin/main'.
 | `*.log` | 日志 |
 | `secrets.json` / `*.key` / `*.pem` | 密钥与证书 |
 
-现在仓库里应该**只有 `.gitignore` 一个文件**。若看到其它文件，告诉我。
-
-### 验证点 3：本地与远程一致
-
-**在哪个文件夹执行**：`D:\Vibe Coding\mini-hot`
-
+验证无误后，在本地跑一次确认同步：
 ```bash
+cd "D:/Vibe Coding/mini-hot"
 git status
 ```
-**成功时看到什么**：
-```
-On branch main
-Your branch is up to date with 'origin/main'.
+应显示 `Your branch is up to date with 'origin/main'.` 和 `nothing to commit, working tree clean`。
 
-nothing to commit, working tree clean
-```
-`working tree clean` = 所有东西都存好了，没有任何未保存的改动。
-
-```bash
-git log --oneline
-```
-应只显示一行提交。
+> 💡 补充：`mini-hot` 目前是空项目，所以仓库里只有 `.gitignore` 和清单文档，**没有项目代码**。这是「从零开始」的正常结果——新代码你后续写完，再 `git add . && git commit -m "说明" && git push` 即可。
 
 ---
 
-## 完成标准对照表
+## 附：忽略文件设计说明
 
-| 完成标准 | 状态 | 证据 |
-|---|---|---|
-| 环境检查完成 | ✅ 已完成 | Git 2.55.0、用户名邮箱已配、无缺工具 |
-| 创建合适的忽略文件 | ✅ 已创建（我代做） | `mini-hot\.gitignore` |
-| 禁止上传 .env | ⏳ 待验证 | 第 3 步 check-ignore + 第 9 步验证点 2 |
-| 禁止上传密码 / API 密钥 | ⏳ 待验证 | 已含 `*.key`/`*.pem`/`*credentials*.json`/`*secret*.json` |
-| 禁止上传依赖目录 | ⏳ 待验证 | `node_modules/` 已在忽略清单 |
-| 禁止上传本地数据库 | ⏳ 待验证 | `*.db`/`*.sqlite*`/`data/` 已在忽略清单 |
-| GitHub 上能看到仓库内容 | ⏳ 待验证 | 第 9 步验证点 1 |
-| 敏感文件未出现在仓库 | ⏳ 待验证 | 第 9 步验证点 2 |
+`mini-hot\.gitignore` 覆盖四类你点名禁止上传的内容：
+
+| 类别 | 覆盖规则 |
+|---|---|
+| **密钥 / 密码** | `.env`、`.env.*`、`*.pem`、`*.key`、`*.p12`、`*.pfx`、`*credentials*.json`、`*secret*.json`、`passwords.txt` |
+| **依赖目录** | `node_modules/`、`.pnpm-store/`、`.yarn/cache/`、`vendor/`、`bower_components/` |
+| **本地数据库** | `*.db`、`*.db-wal`、`*.db-shm`、`*.sqlite`、`*.sqlite3`、`*.mdb`、`*.accdb`、`data/` |
+| **构建产物** | `dist/`、`build/`、`out/`、`.vite/`、`*.tsbuildinfo` |
+
+另含日志、缓存、编辑器与系统文件规则。特设 `!.env.example` 例外——将来可放不含真实密钥的模板文件。
 
 ---
 
-## 一个必须知道的坑
+## 必须知道的坑
 
 `.gitignore` **只对「还没被 Git 跟踪」的文件生效**。
 
-如果某个文件已经被 `git add` 或 `git commit` 过，之后再写进 `.gitignore` **也不会**把它从仓库移除。正确做法是：
+若某文件已被 `git add` 或 `git commit` 过，之后再写进 `.gitignore` **也不会**把它从仓库移除：
 
 ```bash
-git rm --cached 文件名
+git rm --cached 文件名      # 从 Git 跟踪列表摘掉，保留本地文件
 ```
-
-把它从 Git 的跟踪列表里摘掉（**保留本地文件**），然后重新提交。
 
 **万一不小心把密钥提交并推送了**，顺序很重要：
 1. **立刻去发密钥的平台作废 / 轮换那个密钥**（最重要，Git 历史很难彻底清除）
@@ -344,43 +175,26 @@ git rm --cached 文件名
 
 ---
 
-## 常见意外与处理
+## 以后的日常提交流程
 
-**Q：以后写完代码怎么提交？**
 在 `D:\Vibe Coding\mini-hot` 下依次：
+
 ```bash
-git status              # 先看要提交什么，确认没有敏感文件
+git status                      # 先看要提交什么，确认没有敏感文件
 git add .
 git commit -m "说明你做了什么"
 git push
 ```
 
-**Q：推送失败，提示 `rejected` 或 `fetch first`**
-说明远程有本地没有的提交。先停手，把报错原文发我。
-
-**Q：推送后想改提交说明**
-`git commit --amend -m "新说明"`，然后 `git push -f`。
-但**强制推送有风险**，建议先问我。
-
-**Q：`node_modules` 还是被提交了**
-执行 `git rm -r --cached node_modules`，确认它在 `.gitignore` 里，再提交。
-
 ---
 
-## 命令速查（第 2～8 步浓缩版）
+## 常见意外与处理
 
-在 `D:\Vibe Coding\mini-hot` 下依次执行：
+**Q：推送提示 `rejected` 或 `fetch first`**
+说明远程有本地没有的提交。先停手，把报错原文发我。
 
-```bash
-git init -b main
-git status
-git check-ignore -v .env          # 验证忽略规则生效
-git remote add origin https://github.com/Panky-pan/mini-hot.git
-git remote -v                     # 确认是 mini-hot
-git add .
-git status                        # 确认敏感文件不在绿色清单
-git commit -m "chore: 初始化 mini-hot 仓库与忽略规则"
-git log --oneline                 # 确认一行、(root-commit)
-git push -u origin main
-git status                        # 应显示 working tree clean
-```
+**Q：想改上一次的提交说明**
+`git commit --amend -m "新说明"`，然后 `git push -f`（强制推送有风险，建议先问我）。
+
+**Q：`node_modules` 还是被提交了**
+`git rm -r --cached node_modules`，确认它在 `.gitignore` 里，再提交。
