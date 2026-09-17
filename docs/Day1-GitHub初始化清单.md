@@ -4,9 +4,9 @@
 
 ---
 
-## 执行状态（2026-09-17 15:40 更新）
+## 执行状态（2026-09-17 15:50 最终更新：✅ 全部完成）
 
-由我代为执行，结果如下：
+由我代执行前 5 步，你在本机完成推送。**Day 1 任务全部完成。**
 
 | 步骤 | 命令 | 状态 |
 |---|---|---|
@@ -14,49 +14,40 @@
 | 2 | 忽略规则验证（`git check-ignore`） | ✅ 7 类敏感文件全部命中 |
 | 3 | `git remote add origin .../mini-hot.git` | ✅ 已完成 |
 | 4 | `git add .` | ✅ 已完成（仅 2 个文件） |
-| 5 | `git commit` | ✅ 已完成，提交 `cb94f4d` |
-| 6 | `git push -u origin main` | ❌ **失败，需你在本机执行** |
+| 5 | `git commit` | ✅ 已完成，提交 `cb94f4d` + `2676dd6` |
+| 6 | `git push -u origin main` | ✅ **15:48 你在本机推送成功**（中途弹出浏览器授权页，点同意后完成——那是 Git Credential Manager 的正常授权流程，页面显示 "Authentication Succeeded" 即成功） |
 
-### 推送失败原因
+### 推送成功验证（我通过 GitHub API 核实，15:50）
+
+远程仓库上已有两个提交，与本地完全一致：
+
+```
+2676dd6 docs: 更新 Day1 清单，标注推送需在本机执行
+cb94f4d Day 1｜初始化 mini-hot 仓库与忽略规则   (root-commit)
+```
+
+> 注：推送后最初几十秒，仓库网页可能短暂显示 "This repository is empty"（缓存/同步延迟），以刷新后的页面或提交记录为准。
+
+---
+
+## 历史记录：推送当晚的过程备份
+
+以下为此前推送受阻时的诊断记录，留作参考（问题已解决，无需处理）：
 
 ```
 fatal: unable to access 'https://github.com/Panky-pan/mini-hot.git/':
 CONNECT tunnel failed, response 502
 ```
 
-这不是你的配置问题，也不是仓库地址错误。原因是**我的执行环境没有访问 GitHub 的网络权限**（网络请求被代理拦截，返回 502）。
-
-我做了对比测试佐证：直接访问 `https://github.com/Panky-pan/mini-hot` 网页也超时，而我此前能正常访问该网页——说明是**环境网络限制**，非 GitHub 故障、非配置错误。
-
-**好消息：前 5 步全部成功，提交已安全保存在本地。** 你现在只需在**自己的电脑**上敲一条命令即可完成推送。
+原因是**助手的执行环境没有访问 GitHub 的网络权限**（网络请求被代理拦截）。对比测试：直接访问仓库网页也超时，而此前能正常访问——确认为环境网络限制，非配置错误。最终由你在本机完成推送。
 
 ---
 
 ## 你现在只需要做这一步
 
-在你自己的 PowerShell 或 Git Bash 里执行：
+**✅ 已完成（15:48 你在本机推送成功，凭据已被 Git Credential Manager 记住）。**
 
-```bash
-cd "D:/Vibe Coding/mini-hot"
-git push -u origin main
-```
-
-**成功时看到什么**：
-```
-Enumerating objects: 5, done.
-Counting objects: 100% (5/5), done.
-Writing objects: 100% (5/5), 1.5 KiB | 800 KiB/s, done.
-To https://github.com/Panky-pan/mini-hot.git
- * [new branch]      main -> main
-branch 'main' set up to track 'origin/main'.
-```
-
-**可能弹出登录窗口**：
-- 若弹出浏览器授权页 → 点同意即可（你的电脑已配 `credential.helper = manager`，会记住凭据）
-- 若要求输入密码 → **不能用账号密码**，需输入 Personal Access Token
-  （GitHub 网页 → 右上角头像 → Settings → Developer settings → Personal access tokens → Tokens (classic) → Generate new token，勾选 `repo` 权限）
-
-**若仍报 502**：说明你本机网络也需代理。把报错原文发我，或在终端里配置代理后重试。
+以后再推送不会再弹授权窗口，直接 `git push` 即可。
 
 ---
 
