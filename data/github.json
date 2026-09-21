@@ -1,0 +1,310 @@
+{
+  "source": "github",
+  "listTitle": "GitHub Trending · 今日",
+  "listType": "daily",
+  "listUpdatedAt": "2026-09-21T19:45:00+08:00",
+  "listStatus": "ok",
+  "itemCount": 25,
+  "items": [
+    {
+      "source": "github",
+      "rank": 1,
+      "title": "【假数据】GitHub Trending · 今日占位条目 01：这是一条用于排版验证的较长标题示例",
+      "url": "https://github.com/trending",
+      "heat": 1712500,
+      "heatLabel": "star 数",
+      "extra": {
+        "lang": "Python",
+        "stars": 97500
+      }
+    },
+    {
+      "source": "github",
+      "rank": 2,
+      "title": "【假数据】GitHub Trending · 今日占位条目 02：这是一条用于排版验证的较长标题示例",
+      "url": "https://github.com/trending",
+      "heat": 1096000,
+      "heatLabel": "star 数",
+      "extra": {
+        "lang": "TypeScript",
+        "stars": 95000
+      }
+    },
+    {
+      "source": "github",
+      "rank": 3,
+      "title": "【假数据】GitHub Trending · 今日占位条目 03：这是一条用于排版验证的较长标题示例",
+      "url": "https://github.com/trending",
+      "heat": 787750,
+      "heatLabel": "star 数",
+      "extra": {
+        "lang": "Go",
+        "stars": 92500
+      }
+    },
+    {
+      "source": "github",
+      "rank": 4,
+      "title": "【假数据】GitHub Trending · 今日占位条目 04：这是一条用于排版验证的较长标题示例",
+      "url": "https://github.com/trending",
+      "heat": 602800,
+      "heatLabel": "star 数",
+      "extra": {
+        "lang": "Rust",
+        "stars": 90000
+      }
+    },
+    {
+      "source": "github",
+      "rank": 5,
+      "title": "【假数据】GitHub Trending · 今日占位条目 05：这是一条用于排版验证的较长标题示例",
+      "url": "https://github.com/trending",
+      "heat": 479500,
+      "heatLabel": "star 数",
+      "extra": {
+        "lang": "Java",
+        "stars": 87500
+      }
+    },
+    {
+      "source": "github",
+      "rank": 6,
+      "title": "【假数据】GitHub Trending · 今日占位条目 06：这是一条用于排版验证的较长标题示例",
+      "url": "https://github.com/trending",
+      "heat": 391429,
+      "heatLabel": "star 数",
+      "extra": {
+        "lang": "C++",
+        "stars": 85000
+      }
+    },
+    {
+      "source": "github",
+      "rank": 7,
+      "title": "【假数据】GitHub Trending · 今日占位条目 07：这是一条用于排版验证的较长标题示例",
+      "url": "https://github.com/trending",
+      "heat": 2603000,
+      "heatLabel": "star 数",
+      "extra": {
+        "lang": "JavaScript",
+        "stars": 82500
+      }
+    },
+    {
+      "source": "github",
+      "rank": 8,
+      "title": "【假数据】GitHub Trending · 今日占位条目 08：这是一条用于排版验证的较长标题示例",
+      "url": "https://github.com/trending",
+      "heat": 1233000,
+      "heatLabel": "star 数",
+      "extra": {
+        "lang": "Python",
+        "stars": 80000
+      }
+    },
+    {
+      "source": "github",
+      "rank": 9,
+      "title": "【假数据】GitHub Trending · 今日占位条目 09：这是一条用于排版验证的较长标题示例",
+      "url": "https://github.com/trending",
+      "heat": 776333,
+      "heatLabel": "star 数",
+      "extra": {
+        "lang": "TypeScript",
+        "stars": 77500
+      }
+    },
+    {
+      "source": "github",
+      "rank": 10,
+      "title": "【假数据】GitHub Trending · 今日占位条目 10：这是一条用于排版验证的较长标题示例",
+      "url": "https://github.com/trending",
+      "heat": 548000,
+      "heatLabel": "star 数",
+      "extra": {
+        "lang": "Go",
+        "stars": 75000
+      }
+    },
+    {
+      "source": "github",
+      "rank": 11,
+      "title": "【假数据】GitHub Trending · 今日占位条目 11：这是一条用于排版验证的较长标题示例",
+      "url": "https://github.com/trending",
+      "heat": 411000,
+      "heatLabel": "star 数",
+      "extra": {
+        "lang": "Rust",
+        "stars": 72500
+      }
+    },
+    {
+      "source": "github",
+      "rank": 12,
+      "title": "【假数据】GitHub Trending · 今日占位条目 12：这是一条用于排版验证的较长标题示例",
+      "url": "https://github.com/trending",
+      "heat": 319667,
+      "heatLabel": "star 数",
+      "extra": {
+        "lang": "Java",
+        "stars": 70000
+      }
+    },
+    {
+      "source": "github",
+      "rank": 13,
+      "title": "【假数据】GitHub Trending · 今日占位条目 13：这是一条用于排版验证的较长标题示例",
+      "url": "https://github.com/trending",
+      "heat": 254429,
+      "heatLabel": "star 数",
+      "extra": {
+        "lang": "C++",
+        "stars": 67500
+      }
+    },
+    {
+      "source": "github",
+      "rank": 14,
+      "title": "【假数据】GitHub Trending · 今日占位条目 14：这是一条用于排版验证的较长标题示例",
+      "url": "https://github.com/trending",
+      "heat": 1644000,
+      "heatLabel": "star 数",
+      "extra": {
+        "lang": "JavaScript",
+        "stars": 65000
+      }
+    },
+    {
+      "source": "github",
+      "rank": 15,
+      "title": "【假数据】GitHub Trending · 今日占位条目 15：这是一条用于排版验证的较长标题示例",
+      "url": "https://github.com/trending",
+      "heat": 753500,
+      "heatLabel": "star 数",
+      "extra": {
+        "lang": "Python",
+        "stars": 62500
+      }
+    },
+    {
+      "source": "github",
+      "rank": 16,
+      "title": "【假数据】GitHub Trending · 今日占位条目 16：这是一条用于排版验证的较长标题示例",
+      "url": "https://github.com/trending",
+      "heat": 456667,
+      "heatLabel": "star 数",
+      "extra": {
+        "lang": "TypeScript",
+        "stars": 60000
+      }
+    },
+    {
+      "source": "github",
+      "rank": 17,
+      "title": "【假数据】GitHub Trending · 今日占位条目 17：这是一条用于排版验证的较长标题示例",
+      "url": "https://github.com/trending",
+      "heat": 308250,
+      "heatLabel": "star 数",
+      "extra": {
+        "lang": "Go",
+        "stars": 57500
+      }
+    },
+    {
+      "source": "github",
+      "rank": 18,
+      "title": "【假数据】GitHub Trending · 今日占位条目 18：这是一条用于排版验证的较长标题示例",
+      "url": "https://github.com/trending",
+      "heat": 219200,
+      "heatLabel": "star 数",
+      "extra": {
+        "lang": "Rust",
+        "stars": 55000
+      }
+    },
+    {
+      "source": "github",
+      "rank": 19,
+      "title": "【假数据】GitHub Trending · 今日占位条目 19：这是一条用于排版验证的较长标题示例",
+      "url": "https://github.com/trending",
+      "heat": 159833,
+      "heatLabel": "star 数",
+      "extra": {
+        "lang": "Java",
+        "stars": 52500
+      }
+    },
+    {
+      "source": "github",
+      "rank": 20,
+      "title": "【假数据】GitHub Trending · 今日占位条目 20：这是一条用于排版验证的较长标题示例",
+      "url": "https://github.com/trending",
+      "heat": 117429,
+      "heatLabel": "star 数",
+      "extra": {
+        "lang": "C++",
+        "stars": 50000
+      }
+    },
+    {
+      "source": "github",
+      "rank": 21,
+      "title": "【假数据】GitHub Trending · 今日占位条目 21：这是一条用于排版验证的较长标题示例",
+      "url": "https://github.com/trending",
+      "heat": 685000,
+      "heatLabel": "star 数",
+      "extra": {
+        "lang": "JavaScript",
+        "stars": 47500
+      }
+    },
+    {
+      "source": "github",
+      "rank": 22,
+      "title": "【假数据】GitHub Trending · 今日占位条目 22：这是一条用于排版验证的较长标题示例",
+      "url": "https://github.com/trending",
+      "heat": 274000,
+      "heatLabel": "star 数",
+      "extra": {
+        "lang": "Python",
+        "stars": 45000
+      }
+    },
+    {
+      "source": "github",
+      "rank": 23,
+      "title": "【假数据】GitHub Trending · 今日占位条目 23：这是一条用于排版验证的较长标题示例",
+      "url": "https://github.com/trending",
+      "heat": 137000,
+      "heatLabel": "star 数",
+      "extra": {
+        "lang": "TypeScript",
+        "stars": 42500
+      }
+    },
+    {
+      "source": "github",
+      "rank": 24,
+      "title": "【假数据】GitHub Trending · 今日占位条目 24：这是一条用于排版验证的较长标题示例",
+      "url": "https://github.com/trending",
+      "heat": 68500,
+      "heatLabel": "star 数",
+      "extra": {
+        "lang": "Go",
+        "stars": 40000
+      }
+    },
+    {
+      "source": "github",
+      "rank": 25,
+      "title": "【假数据】GitHub Trending · 今日占位条目 25：这是一条用于排版验证的较长标题示例",
+      "url": "https://github.com/trending",
+      "heat": 27400,
+      "heatLabel": "star 数",
+      "extra": {
+        "lang": "Rust",
+        "stars": 37500
+      }
+    }
+  ]
+}

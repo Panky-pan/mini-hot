@@ -1,0 +1,409 @@
+/* ============================================================
+   mini-hot · base.css
+   第 1 步：页面骨架
+   职责：CSS 变量（深浅两套色板）+ reset + 骨架期布局
+   说明：TECH_DESIGN 规划的 layout.css / components.css 会在
+        第 3~4 步（列表渲染、移动端适配）时再拆分，本步先用
+        一个文件保持最简。
+   视觉：星空氛围属第 4 周打磨，本步用纯色底占位，先保证
+        可读性达标（PRD 设计原则 1、3）。
+   ============================================================ */
+
+/* ---------- 设计变量 ---------- */
+:root {
+  /* 浅色模式（默认）：近白底 + 深灰正文（PRD §3.3） */
+  --bg: #f7f7f5;            /* 页面底色：近白 */
+  --surface: #ffffff;       /* 卡片/条目面 */
+  --text: #26282c;          /* 正文（标题是主角，对比度优先） */
+  --text-secondary: #6b6f76;/* 次要文字：时效说明、页脚 */
+  --border: #e5e6e3;        /* 分隔线 */
+  --tab-active-bg: #26282c; /* 当前 Tab 背景 */
+  --tab-active-text: #ffffff;
+  --focus: #4a7dff;         /* 键盘焦点描边 */
+
+  /* 4 个来源标识色（PRD 原则 4：同色系可分、不喧宾夺主）
+     深浅两套模式共用同一色相，仅明度差异（PRD M6/M7） */
+  --source-weibo: #e05b3a;
+  --source-baidu: #3a7ce0;
+  --source-github: #6e5bd6;
+  --source-bilibili: #d676ad;
+}
+
+/* 深色模式：深空底 + 浅色正文（PRD §6.2.1）
+   第 6 步 theme.js 会通过 <html data-theme="dark"> 激活，
+   本步先定义好变量，保证骨架在两种模式下都不难看 */
+[data-theme="dark"] {
+  --bg: #14161c;
+  --surface: #1d2029;
+  --text: #e8e9ec;
+  --text-secondary: #9a9ea8;
+  --border: #2b2f3a;
+  --tab-active-bg: #e8e9ec;
+  --tab-active-text: #14161c;
+  --focus: #7da2ff;
+
+  --source-weibo: #f08258;
+  --source-baidu: #6a9ff0;
+  --source-github: #9687e8;
+  --source-bilibili: #e89ac2;
+}
+
+/* ---------- Reset 与基线 ---------- */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.5;
+  /* 底色与文字的过渡留给第 6 步主题切换使用（柔和过渡，
+     属 PRD §6.5 允许的轻微状态过渡） */
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+a { color: inherit; }
+
+/* 键盘可达性：所有可点元素有清晰焦点态（触控/键盘都友好） */
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ---------- 页面容器：PC 居中 + 最大宽度（PRD §6.4） ---------- */
+.page {
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 16px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------- 顶部：站名 + 主题切换 + 我的收藏 ---------- */
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 0;
+}
+
+.site-name {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  /* 站名是纯文字，点击仅回顶部（PRD §6.2），本步为静态 */
+}
+
+.topbar .spacer { flex: 1; }
+
+.topbar-btn {
+  min-width: 44px;           /* 触控目标 ≥44px（PRD §6.3） */
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 0 10px;
+  border-radius: 8px;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.topbar-btn:hover { background: var(--surface); }
+
+/* ---------- 来源 Tab 栏 ---------- */
+.tabs {
+  display: flex;
+  gap: 8px;
+  padding: 4px 0 12px;
+}
+
+.tab {
+  flex: 1;                   /* 4 个 Tab 等宽、手机不折行（PRD §6.2） */
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  font-size: 15px;
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+}
+
+.tab[aria-selected="true"] {
+  background: var(--tab-active-bg);
+  color: var(--tab-active-text);
+  border-color: var(--tab-active-bg);
+  font-weight: 600;
+}
+
+/* 每个源的名字前有一枚标识色小圆点（来源可辨识，原则 4）。
+   标识色只做点缀，不做成大色块（原则 1：安静不抢戏） */
+.tab::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 6px;
+  background: var(--dot, var(--border));
+}
+.tab-weibo::before    { --dot: var(--source-weibo); }
+.tab-baidu::before    { --dot: var(--source-baidu); }
+.tab-github::before   { --dot: var(--source-github); }
+.tab-bilibili::before { --dot: var(--source-bilibili); }
+
+/* ---------- 时效说明 ---------- */
+.meta-line {
+  padding: 10px 0 6px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+/* ---------- 榜单列表区（骨架期：暂无数据） ---------- */
+.list-area {
+  flex: 1;
+  padding: 8px 0 24px;
+}
+
+.empty-hint {
+  padding: 48px 0;
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+/* ---------- 榜单列表（第 3 步） ---------- */
+.list {
+  list-style: none; /* 序号由 JS 显式渲染，不用浏览器默认编号 */
+}
+
+.item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+.item:last-child { border-bottom: none; }
+
+/* 序号：与标题基线对齐（PRD 原则 3）；前三名加粗微强调 */
+.item-rank {
+  min-width: 26px;
+  padding-top: 1px;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums; /* 序号等宽，50 条不歪 */
+  color: var(--text-secondary);
+  text-align: center;
+}
+.item:nth-child(-n + 3) .item-rank { font-weight: 700; }
+
+.item-body { flex: 1; min-width: 0; } /* min-width:0 让长标题能正常截断 */
+
+/* 标题是主角：15px 以上、最多 2 行、超出省略（PRD 原则 3） */
+.item-title {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  font-size: 15.5px;
+  line-height: 1.45;
+  text-decoration: none;
+  color: var(--text);
+}
+.item-title:hover { text-decoration: underline; }
+
+/* 附加信息：常驻显示（PRD F2.2），小字号弱化，不与标题抢戏 */
+.item-meta {
+  margin-top: 3px;
+  font-size: 12.5px;
+  color: var(--text-secondary);
+}
+
+/* 原平台状态标签（热/新/沸）：小圆角小块，安静点缀 */
+.item-tag {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 0 5px;
+  border-radius: 4px;
+  font-size: 11px;
+  line-height: 17px;
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+}
+
+/* ---------- 状态提示（空态/失败态，PRD E1/E3：安静、不刺眼） ---------- */
+.state-hint {
+  padding: 48px 0;
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+/* ---------- 骨架屏（PRD E7：与真实列表同结构的静态占位，无动画） ---------- */
+.skel-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+}
+.skel-rank {
+  width: 26px;
+  height: 14px;
+  border-radius: 4px;
+  background: var(--border);
+}
+.skel-bar {
+  flex: 1;
+  height: 15px;
+  border-radius: 4px;
+  background: var(--border);
+}
+.skel-bar.short { flex: 0.6; }
+
+/* ---------- 移动端适配（PRD §6.3：手机竖屏第一优先，一屏 10 条） ----------
+   思路：小屏上收紧行距与字号——单条高度 ≈ 标题 1 行 + 附加信息 1 行
+   + 上下留白，10 条约 560px，主流手机竖屏一屏放得下（原则 2） */
+@media (max-width: 720px) {
+  .topbar { padding: 8px 0; }
+  .topbar-btn { font-size: 13.5px; padding: 0 8px; }
+  .tabs { gap: 6px; padding: 2px 0 8px; }
+  .tab { font-size: 14px; border-radius: 9px; }
+  .meta-line { padding: 6px 0 2px; font-size: 12.5px; }
+
+  .item { padding: 8px 0; gap: 10px; }
+  .item-rank { min-width: 22px; font-size: 13.5px; }
+  .item-title { font-size: 15px; line-height: 1.42; }
+  .item-meta { margin-top: 2px; font-size: 12px; }
+  .item-tag { margin-left: 5px; line-height: 16px; font-size: 10.5px; }
+}
+
+/* ---------- 收藏按钮（第 5 步） ---------- */
+.item-fav {
+  flex-shrink: 0;
+  align-self: center;
+  min-width: 56px;
+  min-height: 36px;
+  padding: 0 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  font-size: 12.5px;
+  color: var(--text-secondary);
+}
+/* 已收藏态：变实、变重，一眼可分（PRD F3.1） */
+.item-fav[aria-pressed="true"] {
+  background: var(--surface);
+  border-color: var(--text-secondary);
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* 顶部收藏入口的激活态（在收藏视图中时） */
+.topbar-btn[aria-pressed="true"] {
+  background: var(--surface);
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* ---------- 收藏列表视图（第 5 步） ---------- */
+/* 来源标识：色点 + 来源名，收藏是跨源混合的，必须一眼可分（PRD F3.3） */
+.fav-source {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  min-width: 44px;
+  padding-top: 2px;
+  gap: 5px;
+  font-size: 12.5px;
+  color: var(--text-secondary);
+}
+.fav-source::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--dot, var(--border));
+}
+.src-weibo::before    { --dot: var(--source-weibo); }
+.src-baidu::before    { --dot: var(--source-baidu); }
+.src-github::before   { --dot: var(--source-github); }
+.src-bilibili::before { --dot: var(--source-bilibili); }
+
+/* 空状态的「回到榜单」入口（PRD B6）与失败态的「重试」入口（E1/E6） */
+.empty-action,
+.retry-btn {
+  margin-top: 14px;
+  min-height: 44px;
+  padding: 0 18px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  font-size: 14px;
+}
+.empty-action:hover,
+.retry-btn:hover { background: var(--surface); }
+
+/* 全部来源失败的顶部提示条（E2：安静、非弹窗、非红色告警块） */
+.global-alert {
+  margin-bottom: 8px;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+/* ---------- 轻提示（E9/E10：底部浮出，自动消失，非弹窗） ---------- */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 32px;
+  transform: translateX(-50%);
+  max-width: 80%;
+  padding: 10px 16px;
+  border-radius: 8px;
+  background: var(--tab-active-bg);
+  color: var(--tab-active-text);
+  font-size: 13px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+  z-index: 10;
+}
+.toast.show { opacity: 1; }
+
+/* ---------- 页脚声明（F4 一次写全） ---------- */
+.footer {
+  border-top: 1px solid var(--border);
+  padding: 18px 0 28px;
+  font-size: 12.5px;
+  line-height: 1.8;
+  color: var(--text-secondary);
+}
+
+.footer strong { color: var(--text); font-weight: 600; }
+
+.footer .source-dots {
+  display: inline-block;
+  margin-right: 4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  vertical-align: middle;
+}

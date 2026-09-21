@@ -1,0 +1,25 @@
+{
+  "updatedAt": "2026-09-21T19:45:00+08:00",
+  "sources": {
+    "weibo": {
+      "status": "ok",
+      "lastSuccessAt": "2026-09-21T19:45:00+08:00",
+      "lastError": null
+    },
+    "baidu": {
+      "status": "ok",
+      "lastSuccessAt": "2026-09-21T19:45:00+08:00",
+      "lastError": null
+    },
+    "github": {
+      "status": "ok",
+      "lastSuccessAt": "2026-09-21T19:45:00+08:00",
+      "lastError": null
+    },
+    "bilibili": {
+      "status": "ok",
+      "lastSuccessAt": "2026-09-21T19:45:00+08:00",
+      "lastError": null
+    }
+  }
+}

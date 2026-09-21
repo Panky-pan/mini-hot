@@ -49,7 +49,6 @@ out/
 *.sqlite3-journal
 *.mdb
 *.accdb
-data/
 *.dump
 *.sql.gz
 
