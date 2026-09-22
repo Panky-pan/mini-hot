@@ -108,11 +108,12 @@
   <!-- 回到顶部：滚动超过一屏高度后由 columns.js 显示，点击回顶 -->
   <button type="button" class="back-top" id="back-top" aria-label="回到顶部" hidden>↑ 顶部</button>
 
-  <!-- 脚本：theme（主题）→ api（取数）→ favorites（存储）→ columns（多栏渲染，IIFE 不加全局）
+  <!-- 脚本：theme（主题）→ api（取数）→ favorites（存储）→ components（可复用条目组件）→ columns（多栏渲染，IIFE 不加全局）
        注意：不加载 main.js / render.js——那是 Tab 版的编排与渲染，两版页面互不干扰 -->
   <script src="./js/theme.js" defer></script>
   <script src="./js/api.js" defer></script>
   <script src="./js/favorites.js" defer></script>
+  <script src="./js/components.js" defer></script>
   <script src="./js/columns.js" defer></script>
 </body>
 </html>

@@ -73,79 +73,19 @@ function renderFavoritesMeta(count) {
     "我的收藏 · 共 " + count + " 条 · 仅保存在本机浏览器";
 }
 
-/* ---------- 收藏按钮（榜单条目右侧） ---------- */
-function buildFavButton(item) {
-  if (!window.favorites || !window.favorites.storageOk) return null; // E9：存储不可用则不渲染
-  const id = window.favorites.favIdOf(item);
-  const faved = window.favorites.isFavorite(id);
-  const btn = document.createElement("button");
-  btn.type = "button";
-  btn.className = "item-fav";
-  btn.dataset.favId = id;
-  btn.setAttribute("aria-pressed", String(faved));
-  btn.textContent = faved ? "已收藏" : "收藏";
-  return btn;
-}
-
-/* ---------- 榜单列表 ---------- */
+/* ---------- 榜单列表（Day 8 余力加练：条目渲染已收编到 components.js） ----------
+   本函数只负责：调组件拼榜单 → 空态判断 → 上屏。条目的 DOM 细节
+   （序号/标题/meta/热度/收藏按钮）全部由 mhCard.rankList(variant:"tab") 完成 */
 function renderList(doc) {
   const area = document.getElementById("list-area");
-  const ol = document.createElement("ol");
-  ol.className = "list";
+  const r = window.mhCard.rankList(doc.items, { variant: "tab" });
 
-  for (const it of doc.items) {
-    // 条目五要素不齐的不渲染（PRD E4：宁可少一条，不可死链）
-    if (!it.title || !it.url || typeof it.rank !== "number") continue;
-
-    const li = document.createElement("li");
-    li.className = "item";
-
-    const rank = document.createElement("span");
-    rank.className = "item-rank";
-    rank.textContent = String(it.rank);
-
-    const body = document.createElement("div");
-    body.className = "item-body";
-
-    const link = document.createElement("a");
-    link.className = "item-title";
-    link.href = it.url;
-    link.target = "_blank";
-    link.rel = "noopener";
-    link.textContent = it.title;
-    body.appendChild(link);
-
-    const meta = document.createElement("div");
-    meta.className = "item-meta";
-    const parts = [];
-    if (it.heat != null) parts.push(formatHeat(it.heat) + " " + (it.heatLabel || ""));
-    if (it.extra && it.extra.lang) parts.push(it.extra.lang);
-    if (it.extra && it.extra.up) parts.push(it.extra.up);
-    meta.textContent = parts.join(" · ");
-
-    if (Array.isArray(it.tags)) {
-      for (const t of it.tags) {
-        const tag = document.createElement("span");
-        tag.className = "item-tag";
-        tag.textContent = t;
-        meta.appendChild(tag);
-      }
-    }
-    body.appendChild(meta);
-
-    li.appendChild(rank);
-    li.appendChild(body);
-    const favBtn = buildFavButton(it);
-    if (favBtn) li.appendChild(favBtn);
-    ol.appendChild(li);
-  }
-
-  if (ol.children.length === 0) {
+  if (r.rendered === 0) {
     renderSourceEmpty();
     return;
   }
   const frag = document.createDocumentFragment();
-  frag.appendChild(ol);
+  frag.appendChild(r.el);
   area.replaceChildren(frag);
 }
 

@@ -4,7 +4,8 @@
    - 本文件整体包在 IIFE 里，除必要的初始化调用外不新增任何
      全局函数（零构建多脚本共享全局作用域，2026-09-22 曾因
      同名全局函数互相覆盖出过事故，此处从根上规避）
-   - 只复用 theme.js / api.js / favorites.js 的公开能力
+   - 复用 theme.js / api.js / favorites.js 的公开能力；
+     榜单条目渲染复用 components.js（Day 8 余力加练收编，variant:"columns"）
    需求对应：
    - 四平台并列展示（>720px 两栏、≤720px 单栏），每栏一卡
    - 每源只显示前 10 条（2026-09-22 拍板）；序号在前、热度在右
@@ -81,75 +82,19 @@
     setStateBox(card, frag);
   }
 
-  /* 状态二：成功 —— 渲染榜单（序号在前、热度在右） */
+  /* 状态二：成功 —— 渲染榜单（序号在前、热度在右）
+     Day 8 余力加练：条目 DOM 细节已收编到 components.js，
+     本函数只负责调组件（variant:"columns" + 前 10 条截取）与状态切换 */
   function renderColumn(doc) {
     var card = cardEl(doc.source);
-    var ol = document.createElement("ol");
-    ol.className = "col-list";
+    var r = window.mhCard.rankList(doc.items, {
+      variant: "columns",
+      limit: TOP_N, // 只渲染前 TOP_N 条（2026-09-22 拍板）；序号仍用原始 rank
+      onRegister: function (id, item) { itemsById[id] = item; }, // 收藏点击时反查
+    });
 
-    // 只渲染前 TOP_N 条（2026-09-22 拍板）；序号仍用原始 rank，1~10 连续
-    var shown = 0;
-    for (var i = 0; i < doc.items.length && shown < TOP_N; i++) {
-      var it = doc.items[i];
-      // 五要素不齐的不渲染：宁可少一条，不可死链（PRD E4）
-      if (!it.title || !it.url || typeof it.rank !== "number") continue;
-
-      var li = document.createElement("li");
-      li.className = "col-item";
-
-      // 序号在前
-      var rank = document.createElement("span");
-      rank.className = "col-rank";
-      rank.textContent = String(it.rank);
-
-      // 标题 + 特色字段/标签
-      var body = document.createElement("div");
-      body.className = "col-body";
-      var link = document.createElement("a");
-      link.className = "col-title";
-      link.href = it.url;
-      link.target = "_blank";
-      link.rel = "noopener";
-      link.textContent = it.title;
-      body.appendChild(link);
-
-      var meta = document.createElement("div");
-      meta.className = "col-meta";
-      var parts = [];
-      if (it.extra && it.extra.lang) parts.push(it.extra.lang);
-      if (it.extra && it.extra.up) parts.push(it.extra.up);
-      if (parts.length) meta.textContent = parts.join(" · ");
-      if (Array.isArray(it.tags)) {
-        for (var t = 0; t < it.tags.length; t++) {
-          var tag = document.createElement("span");
-          tag.className = "item-tag";
-          tag.textContent = it.tags[t];
-          meta.appendChild(tag);
-        }
-      }
-      if (meta.childNodes.length) body.appendChild(meta);
-
-      li.appendChild(rank);
-      li.appendChild(body);
-
-      // 热度在右（原样显示，口径在栏副标题标明，不跨源比较——PRD §7.2）
-      if (it.heat != null) {
-        var heat = document.createElement("span");
-        heat.className = "col-heat";
-        heat.textContent = formatHeat(it.heat);
-        li.appendChild(heat);
-      }
-
-      // 收藏按钮（☆/★）。存储不可用则整个不渲染（PRD E9，看榜不受影响）
-      var favBtn = buildFavButton(it);
-      if (favBtn) li.appendChild(favBtn);
-
-      ol.appendChild(li);
-      shown++;
-    }
-
-    if (ol.children.length === 0) { showEmpty(doc.source); return; }
-    setStateBox(card, ol);
+    if (r.rendered === 0) { showEmpty(doc.source); return; }
+    setStateBox(card, r.el);
   }
 
   /* 状态三：空 —— 抓到了但 0 条，不显示空白区域（PRD E3） */
@@ -268,22 +213,8 @@
   /* ============================================================
      收藏（复用 favorites.js，与 Tab 版共用 localStorage）
      ============================================================ */
-  function buildFavButton(item) {
-    if (!window.favorites || !window.favorites.storageOk) return null;
-    var id = window.favorites.favIdOf(item);
-    itemsById[id] = item; // 记录映射，点击时反查
-    var faved = window.favorites.isFavorite(id);
-    var btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "item-fav";
-    btn.dataset.favId = id;
-    btn.setAttribute("aria-pressed", String(faved));
-    btn.textContent = faved ? "★" : "☆";
-    btn.title = faved ? "取消收藏" : "收藏";
-    btn.setAttribute("aria-label", faved ? "取消收藏" : "收藏");
-    return btn;
-  }
-
+  /* ---------- 收藏按钮点击（榜单条目的收藏按钮由 components.js 生成，
+     id→条目映射经 onRegister 回调写入 itemsById） ---------- */
   function handleFavClick(btn) {
     var id = btn.dataset.favId;
     var item = itemsById[id] || favRecordsById[id];
