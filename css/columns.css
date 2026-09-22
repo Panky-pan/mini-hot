@@ -1,0 +1,202 @@
+/* ============================================================
+   mini-hot · columns.css —— 四栏版首页（index2.html 专用）
+   策略：base.css 继续提供设计变量、reset、topbar/页脚/收藏/
+        状态提示/骨架屏等通用组件；本文件只写「多栏布局」的
+        增量样式，两版页面共用一套变量与视觉语言
+   布局断点（2026-09-22 用户拍板：PC 两栏 + 每源前 10 条）：
+     >720px   两栏并排（PC / 平板）
+     ≤720px   单栏纵向堆叠（手机，无横向滚动）
+   ============================================================ */
+
+/* 页面放宽以容纳两栏（base.css 的 .page 是 720px 单列宽度） */
+.page-cols { max-width: 1240px; }
+
+/* ---------- 顶部更新时间（用户需求：顶部标题和更新时间） ---------- */
+.update-line {
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* ---------- 两栏棋盘 ---------- */
+.board {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  align-items: start;          /* 各栏内容高度不同，不互相拉伸 */
+  padding: 4px 0 24px;
+}
+
+@media (max-width: 720px) {
+  .board { grid-template-columns: 1fr; gap: 10px; padding: 2px 0 16px; }
+}
+
+/* ---------- 单栏卡片 ---------- */
+.col-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 14px 6px;
+  min-width: 0;                /* 配合 grid 的 minmax(0,1fr)，长标题不撑破 */
+}
+
+.col-head {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+/* 来源名前的标识色小圆点：复用 base.css 的来源色变量（原则 4） */
+.col-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 15px;
+  font-weight: 700;
+}
+.col-name::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--dot, var(--border));
+}
+.col-src-weibo::before    { --dot: var(--source-weibo); }
+.col-src-baidu::before    { --dot: var(--source-baidu); }
+.col-src-github::before   { --dot: var(--source-github); }
+.col-src-bilibili::before { --dot: var(--source-bilibili); }
+
+/* 栏内时间：右对齐、等宽数字，不与来源名抢戏。
+   stale = 数据超过 6 小时未更新的警示态（PRD E5）：加 ⚠ 由 JS 填，
+   颜色保持次要色不变红——安静提示，不做刺眼告警（PRD §8.5 不变形） */
+.col-time {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.col-time.stale { font-weight: 600; }
+
+/* 栏副标题：榜单名 · 时间窗口 · 热度口径（PRD §7.2：热度必须标明口径） */
+.col-sub {
+  margin: 2px 0 4px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+/* ---------- 栏内条目：序号在前、标题居中、热度在右 ---------- */
+.col-list { list-style: none; }
+
+.col-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+}
+.col-item:last-child { border-bottom: none; }
+
+.col-rank {
+  flex-shrink: 0;
+  min-width: 22px;
+  padding-top: 2px;
+  text-align: center;
+  font-size: 13.5px;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums; /* 序号等宽，多位数不歪 */
+}
+/* 前三名加粗微强调（与 Tab 版一致的视觉语言） */
+.col-item:nth-child(-n + 3) .col-rank { font-weight: 700; }
+
+.col-body { flex: 1; min-width: 0; } /* min-width:0 让长标题正常截断 */
+
+/* 标题是主角：15px、最多 2 行、超出省略（PRD 原则 3） */
+.col-title {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  font-size: 15px;
+  line-height: 1.42;
+  color: var(--text);
+  text-decoration: none;
+}
+.col-title:hover { text-decoration: underline; }
+
+/* 栏内附加信息：语言/UP主等特色字段 + 原平台标签（热/新/沸） */
+.col-meta {
+  margin-top: 2px;
+  font-size: 11.5px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* 热度值在右：常驻显示（PRD F2.2），等宽数字，不换行不挤压标题 */
+.col-heat {
+  flex-shrink: 0;
+  align-self: center;
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* 收藏按钮在四栏里用星形：☆ 未收藏 / ★ 已收藏，
+   复用 base.css 的 .item-fav 边框样式，只收窄为方形图标按钮。
+   桌面 36px 够点；手机宽度在下方媒体查询放大到 44px（PRD §6.3 / C5） */
+.col-item .item-fav {
+  flex-shrink: 0;
+  align-self: center;
+  min-width: 36px;
+  width: 36px;
+  min-height: 36px;
+  padding: 0;
+  font-size: 17px;
+  line-height: 1;
+}
+
+/* ---------- 手机微调（≤720px：单栏堆叠，行距收紧保证一屏更多条目） ----------
+   收藏按钮放大到 44px 触控目标（PRD §6.3 / C5），收藏视图里同样生效 */
+@media (max-width: 720px) {
+  .col-card { padding: 10px 12px 4px; }
+  .col-item { padding: 7px 0; gap: 7px; }
+  .update-line { font-size: 12.5px; }
+
+  .col-item .item-fav,
+  #fav-area .item-fav {
+    min-width: 44px;
+    width: 44px;
+    min-height: 44px;
+  }
+}
+
+/* ---------- 顶栏防误触（PRD §6.3：顶部 3 个可点元素注意间距） ----------
+   手机窄屏下站名+时间+两个按钮一行放不下时允许安全换行，
+   时间行不再强制 nowrap 撑破布局 */
+.page-cols .topbar { flex-wrap: wrap; row-gap: 0; }
+@media (max-width: 720px) {
+  .page-cols .update-line { white-space: normal; }
+}
+
+/* ---------- 回到顶部按钮（2026-09-22 用户要求） ----------
+   固定右下角，滚动超过一屏高度才出现（JS 控制hidden）；
+   样式沿用 surface+边框的安静语言，44px 触控目标（PRD §6.3），
+   无动画不闪动（§6.5 动效克制） */
+.back-top {
+  position: fixed;
+  right: 20px;
+  bottom: 24px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 14px;
+  border-radius: 22px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-secondary);
+  font-size: 13px;
+  box-shadow: none;
+  z-index: 10;
+}
+.back-top:hover { color: var(--text); }

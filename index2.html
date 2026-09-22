@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>mini-hot · 迷你聚合热搜（双栏版）</title>
+  <meta name="description" content="迷你聚合热搜（mini-hot）双栏版：一个页面并排看微博、百度、GitHub、B站今天大家都在看什么，点标题跳回原平台。">
+  <link rel="stylesheet" href="./css/base.css">
+  <link rel="stylesheet" href="./css/columns.css">
+  <script>
+    // 主题预置：与 index.html 相同，首帧渲染前定好深浅（手动记忆 > 系统偏好 > 浅色），
+    // 避免打开时闪一下错误配色（PRD M1/M4/M9）
+    (function () {
+      var t = null;
+      try { t = localStorage.getItem("minihot.theme"); } catch (e) { /* 安静降级 */ }
+      if (t !== "dark" && t !== "light") {
+        try {
+          t = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        } catch (e) { t = "light"; }
+      }
+      document.documentElement.setAttribute("data-theme", t);
+    })();
+  </script>
+</head>
+<body>
+  <!-- ============================================================
+       双栏版首页（2026-09-22，独立于 Tab 版 index.html）
+       结构：顶部（站名 + 全站更新时间 + 主题切换 + 我的收藏）
+             → 四平台并列卡片（微博 / 百度 / GitHub / B站，每源前 10 条）
+             → 每栏四种状态：加载中 / 成功 / 空 / 错误
+             → 收藏视图（点「我的收藏」时替换多栏区显示）
+             → 页脚声明（F4）
+       布局：>720px 两栏并排；≤720px 单栏堆叠（2026-09-22 拍板）
+       ============================================================ -->
+
+  <div class="page page-cols">
+
+    <!-- 顶部 -->
+    <header class="topbar">
+      <span class="site-name">mini-hot</span>
+      <!-- 全站更新时间：取 4 个源中最新的一次成功更新时间，由 columns.js 填充 -->
+      <span class="update-line" id="update-time">更新于 --:--</span>
+      <span class="spacer"></span>
+      <button type="button" class="topbar-btn" id="theme-toggle" aria-label="切换深浅模式">☾ 深色</button>
+      <button type="button" class="topbar-btn" id="favorites-toggle" aria-pressed="false">我的收藏</button>
+    </header>
+
+    <!-- 四平台并列卡片：每栏的加载/成功/空/错误四种状态由 columns.js 渲染 -->
+    <section class="board" id="board" aria-label="四平台热榜">
+
+      <article class="col-card" data-source="weibo">
+        <header class="col-head">
+          <span class="col-name col-src-weibo">微博</span>
+          <span class="col-time" data-role="time"></span>
+        </header>
+        <p class="col-sub" data-role="sub"></p>
+        <div class="col-state" data-role="state"></div>
+      </article>
+
+      <article class="col-card" data-source="baidu">
+        <header class="col-head">
+          <span class="col-name col-src-baidu">百度</span>
+          <span class="col-time" data-role="time"></span>
+        </header>
+        <p class="col-sub" data-role="sub"></p>
+        <div class="col-state" data-role="state"></div>
+      </article>
+
+      <article class="col-card" data-source="github">
+        <header class="col-head">
+          <span class="col-name col-src-github">GitHub</span>
+          <span class="col-time" data-role="time"></span>
+        </header>
+        <p class="col-sub" data-role="sub"></p>
+        <div class="col-state" data-role="state"></div>
+      </article>
+
+      <article class="col-card" data-source="bilibili">
+        <header class="col-head">
+          <span class="col-name col-src-bilibili">B站</span>
+          <span class="col-time" data-role="time"></span>
+        </header>
+        <p class="col-sub" data-role="sub"></p>
+        <div class="col-state" data-role="state"></div>
+      </article>
+
+    </section>
+
+    <!-- 收藏视图：点「我的收藏」时显示，四栏区隐藏（复用 base.css 的列表样式） -->
+    <section id="fav-area" hidden>
+      <p class="meta-line" id="fav-meta"></p>
+      <div id="fav-list"></div>
+    </section>
+
+    <!-- 页脚声明（PRD F4：4 个来源名称 + 免责，全部常驻可见） -->
+    <footer class="footer">
+      <p><strong>数据来源：</strong>
+        <span class="source-dots" style="background: var(--source-weibo);"></span>微博热搜 ·
+        <span class="source-dots" style="background: var(--source-baidu);"></span>百度热搜 ·
+        <span class="source-dots" style="background: var(--source-github);"></span>GitHub Trending ·
+        <span class="source-dots" style="background: var(--source-bilibili);"></span>哔哩哔哩排行榜
+      </p>
+      <p>数据来自各平台公开榜单，版权归原作者及原平台所有；本站只提供跳转，不搬运任何正文内容，仅作个人学习用途。信息请以原平台与权威媒体为准。</p>
+    </footer>
+
+  </div>
+
+  <!-- 回到顶部：滚动超过一屏高度后由 columns.js 显示，点击回顶 -->
+  <button type="button" class="back-top" id="back-top" aria-label="回到顶部" hidden>↑ 顶部</button>
+
+  <!-- 脚本：theme（主题）→ api（取数）→ favorites（存储）→ columns（多栏渲染，IIFE 不加全局）
+       注意：不加载 main.js / render.js——那是 Tab 版的编排与渲染，两版页面互不干扰 -->
+  <script src="./js/theme.js" defer></script>
+  <script src="./js/api.js" defer></script>
+  <script src="./js/favorites.js" defer></script>
+  <script src="./js/columns.js" defer></script>
+</body>
+</html>
