@@ -60,6 +60,13 @@ function renderMeta(doc) {
   el.textContent = doc.listTitle + " · 更新于 " + formatTime(doc.listUpdatedAt) + " · " + type;
 }
 
+/* 加载中 / 失败时的时效行：必须显示「当前源」，否则会残留上一个源的标题，
+   与 Tab 高亮、列表区状态自相矛盾（2026-09-22 修） */
+function renderMetaState(source, text) {
+  document.getElementById("meta-line").textContent =
+    (SOURCE_LABEL[source] || source) + " · " + text;
+}
+
 // 收藏视图的时效行位置显示收藏摘要（PRD §7.5：需说明收藏保存在本机）
 function renderFavoritesMeta(count) {
   document.getElementById("meta-line").textContent =
@@ -279,6 +286,7 @@ function renderSkeleton() {
 
 window.render = {
   renderMeta,
+  renderMetaState,
   renderFavoritesMeta,
   renderList,
   renderFavorites,

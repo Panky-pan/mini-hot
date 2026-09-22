@@ -37,8 +37,12 @@ function favIdOf(item) {
   return item.source + "-" + item.rank + "-" + hashUrl(item.url).slice(0, 4);
 }
 
-/* ---------- 读写 ---------- */
-function loadAll() {
+/* ---------- 读写 ----------
+   ⚠️ 函数名必须避开 main.js 的全局启动函数 loadAll：
+   本项目零构建，所有 .js 共享全局作用域，同名函数会互相覆盖
+   （2026-09-22 修：原 loadAll 被 main.js 覆盖，isFavorite 一调用就崩，
+   且报错被误判成「取数失败」——改名 loadFavorites 根治） */
+function loadFavorites() {
   if (!storageOk) return [];
   try {
     const arr = JSON.parse(localStorage.getItem(FAV_KEY) || "[]");
@@ -63,7 +67,7 @@ function toggle(item) {
   if (!storageOk) return { favorited: false, error: "storage" };
 
   const id = favIdOf(item);
-  const list = loadAll();
+  const list = loadFavorites();
   const idx = list.findIndex((f) => f.id === id);
 
   if (idx >= 0) {
@@ -89,12 +93,12 @@ function toggle(item) {
 }
 
 function isFavorite(id) {
-  return loadAll().some((f) => f.id === id);
+  return loadFavorites().some((f) => f.id === id);
 }
 
 // 收藏列表：按 savedAt 倒序（PRD §6.2：新的在上）
 function getAll() {
-  return loadAll().sort((a, b) => b.savedAt - a.savedAt);
+  return loadFavorites().sort((a, b) => b.savedAt - a.savedAt);
 }
 
 window.favorites = { storageOk, favIdOf, toggle, isFavorite, getAll };
