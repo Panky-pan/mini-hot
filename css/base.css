@@ -15,8 +15,20 @@
   --bg: #f7f7f5;            /* 页面底色：近白 */
   --surface: #ffffff;       /* 卡片/条目面 */
   --text: #26282c;          /* 正文（标题是主角，对比度优先） */
-  --text-secondary: #6b6f76;/* 次要文字：时效说明、页脚 */
-  --border: #e5e6e3;        /* 分隔线 */
+  /* 次要文字：时效说明、附加信息、页脚。
+     Day 9 修复：原 #6b6f76 对页面底只有 4.71:1，勉强压过 AA 及格线
+     （4.5:1），却大量用在 11~12.5px 小字上；深色模式同一变量是
+     6.74:1，浅色明显弱一档。加深为 #5d6167 → 对页面底 5.81:1
+     （对卡片面 6.23:1），与深色档位拉平，仍保持「次要」
+     （正文是 13.76:1，主次层级不受影响） */
+  --text-secondary: #5d6167;
+  --border: #d0d3cf;        /* 分隔线/卡片描边（Day 9：原 #e5e6e3 对页面底
+                               仅 1.17:1，浅色下卡片边界几乎看不见；加深到
+                               1.41:1，仍低于次要文字的 5.81:1，只做分组不做装饰） */
+  /* 悬停底色（Day 9 新增）：原 hover 用 --surface（白）盖在近白底/白卡上，
+     对比只有 1.05:1，等于没有反馈。改用比底色更深的浅灰（对底 1.18:1、
+     对卡片面 1.27:1），能看出来但不喧闹；深色模式改用更亮的深灰 */
+  --hover-bg: #e4e5e1;
   --tab-active-bg: #26282c; /* 当前 Tab 背景 */
   --tab-active-text: #ffffff;
   --focus: #4a7dff;         /* 键盘焦点描边 */
@@ -37,7 +49,11 @@
   --surface: #1d2029;
   --text: #e8e9ec;
   --text-secondary: #9a9ea8;
-  --border: #2b2f3a;
+  --border: #363b48;        /* 深色分隔线/卡片描边（Day 9：原 #2b2f3a 对卡片面
+                               仅 1.22:1，同样偏弱；加深到 1.45:1，
+                               与浅色档位对齐） */
+  --hover-bg: #2b303b;      /* 深色悬停底色（Day 9）：比卡片面亮一档
+                               （对卡片面 1.23:1），方向与浅色相反——浅色压深、深色提亮 */
   --tab-active-bg: #e8e9ec;
   --tab-active-text: #14161c;
   --focus: #7da2ff;
@@ -126,7 +142,9 @@ a:focus-visible {
   color: var(--text-secondary);
 }
 
-.topbar-btn:hover { background: var(--surface); }
+/* Day 9 修复：原先 hover 用 --surface（白块盖近白底，对比 1.05:1），
+   等于没有反馈；改用 --hover-bg 专用悬停底色（PRD §6.5 要求点击/悬停有即时反馈） */
+.topbar-btn:hover { background: var(--hover-bg); }
 
 /* ---------- 来源 Tab 栏 ---------- */
 .tabs {
@@ -146,6 +164,11 @@ a:focus-visible {
   color: var(--text-secondary);
   border: 1px solid var(--border);
 }
+
+/* Day 9 修复：未选中的 Tab 原来完全没有悬停反馈，看上去像静态标签。
+   本规则必须写在下面的 [aria-selected="true"] 之前——两者优先级相同
+   （都是 1 个类 + 1 个属性/伪类），靠书写顺序决定胜负，选中态要赢 */
+.tab:hover { background: var(--hover-bg); }
 
 .tab[aria-selected="true"] {
   background: var(--tab-active-bg);
@@ -236,14 +259,16 @@ a:focus-visible {
   color: var(--text-secondary);
 }
 
-/* 原平台状态标签（热/新/沸）：小圆角小块，安静点缀 */
+/* 原平台状态标签（热/新/沸）：小圆角小块，安静点缀。
+   Day 9 修复：原 11px（手机 10.5px）低于 12px 可读下限，统一提到 12px；
+   用「字小 + 淡色 + 细边框」维持『不抢戏』，而不是靠继续压字号 */
 .item-tag {
   display: inline-block;
   margin-left: 6px;
-  padding: 0 5px;
+  padding: 0 6px;
   border-radius: 4px;
-  font-size: 11px;
-  line-height: 17px;
+  font-size: 12px;
+  line-height: 18px;
   color: var(--text-secondary);
   border: 1px solid var(--border);
 }
@@ -291,7 +316,9 @@ a:focus-visible {
   .item-rank { min-width: 22px; font-size: 13.5px; }
   .item-title { font-size: 15px; line-height: 1.42; }
   .item-meta { margin-top: 2px; font-size: 12px; }
-  .item-tag { margin-left: 5px; line-height: 16px; font-size: 10.5px; }
+  /* Day 9 修复：标签不再在手机上单独压到 10.5px（低于 12px 下限），
+     与桌面保持同一字号，只保留左边距的微调 */
+  .item-tag { margin-left: 5px; }
 }
 
 /* ---------- 收藏按钮（第 5 步） ---------- */
@@ -306,12 +333,29 @@ a:focus-visible {
   font-size: 12.5px;
   color: var(--text-secondary);
 }
+/* 悬停反馈：底色微微一变 + 文字由次要色提到正文色（Day 9 修复：
+   原来只有边框色，鼠标划过几乎没反应）。同样要写在下面的已收藏态之前 */
+.item-fav:hover {
+  background: var(--hover-bg);
+  color: var(--text);
+}
+
 /* 已收藏态：变实、变重，一眼可分（PRD F3.1） */
 .item-fav[aria-pressed="true"] {
   background: var(--surface);
   border-color: var(--text-secondary);
   color: var(--text);
   font-weight: 600;
+}
+
+/* 手机上收藏按钮放大到 44px 触控目标（PRD §6.3 / C5）。
+   Day 9 修复：原先只有双栏版（columns.css）放大了，Tab 版停在
+   36px，两版不一致。注意必须写在 .item-fav 基础规则之后——
+   放进前面的手机媒体查询块会被这里的 36px 基础值按顺序覆盖。
+   按钮在行内垂直居中、行高由标题撑起，不额外增加单条高度
+   （原则 2：一屏 10 条不受影响） */
+@media (max-width: 720px) {
+  .item-fav { min-height: 44px; }
 }
 
 /* 顶部收藏入口的激活态（在收藏视图中时） */
@@ -356,7 +400,7 @@ a:focus-visible {
   font-size: 14px;
 }
 .empty-action:hover,
-.retry-btn:hover { background: var(--surface); }
+.retry-btn:hover { background: var(--hover-bg); }   /* Day 9：同 hover 底色修复 */
 
 /* 全部来源失败的顶部提示条（E2：安静、非弹窗、非红色告警块） */
 .global-alert {
