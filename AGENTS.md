@@ -55,5 +55,5 @@
 
 1. 文件存放习惯：项目文件只进 `mini-hot\`，说明性文档进 `mini-hot\docs\`。不往工作区根目录（`D:\Vibe Coding\`）新增任何文件——那里已有的 `vidio\`、`open-design-landing.zip` 等杂物与项目无关，不要纳入仓库，也不要模仿它们的位置建新文件。
 2. 语言偏好：所有产出默认简体中文——代码注释、commit 说明、文档、页面文案都用中文。唯一豁免：数据源抓来的热榜标题、热词等内容数据保持原文，不翻译。
-3. 验证习惯：凡是推送 GitHub，成功与否以 GitHub API 核实为准（`https://api.github.com/repos/Panky-pan/mini-hot/commits/main`），本地 git 显示「Everything up-to-date」不作为成功凭证。核实结果要给用户看。
+3. 验证习惯：凡是推送 GitHub，成功与否以 GitHub API 核实为准（`https://api.github.com/repos/XingHo-VibeCoding/mini-hot/commits/main`，仓库已于 2026-09-23 转入组织 XingHo-VibeCoding，只推组织仓库、不再推个人仓库），本地 git 显示「Everything up-to-date」不作为成功凭证。核实结果要给用户看。
 4. 每次改完代码，提醒用户刷新浏览器看效果。
